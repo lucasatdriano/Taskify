@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #0a060f;
+    --foreground: #020005;
+    --fontColor: #faf8fc;
+    --primary: #39142a;
+    --secundary: #491787;
+    --accent: #eb478e;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #f4f0f9;
+        --foreground: #f7f7f7;
+        --fontColor: #050307;
+        --primary: #ebc5dc;
+        --secundary: #6f3b92;
+        --accent: #e48199;
+    }
+}
+
+body {
+    box-sizing: content-box;
+    background: var(--background);
+    color: var(--fontColor);
+}
