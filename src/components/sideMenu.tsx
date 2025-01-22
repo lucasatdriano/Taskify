@@ -14,7 +14,10 @@ export default function SideMenu() {
                 openMenu ? 'w-72' : 'w-32'
             }`}
         >
-            <div className="flex pb-20 items-center gap-3 px-8 text-2xl">
+            <Link
+                href="/login"
+                className="flex mb-20 items-center gap-3 px-8 py-2 text-2xl transition-all duration-200 rounded-lg hover:bg-slate-100 hover:shadow-sm hover:border-r-4 hover:border-r-primary"
+            >
                 {/* <Image src={'./sideMenu'} alt={'sdc'}></Image> */}
                 <div className="h-16 w-16 rounded-full bg-primary border-2 border-fontColor"></div>
                 <h3
@@ -26,11 +29,11 @@ export default function SideMenu() {
                 >
                     Lucas
                 </h3>
-            </div>
+            </Link>
             <button
                 title="Abrir Menu"
                 type="button"
-                className="p-2 text-4xl bg-primary rounded-full shadow-2xl absolute top-24 -right-6 active:bg-pink-200 transition-colors duration-100"
+                className="p-2 text-4xl bg-primary rounded-full shadow-2xl absolute top-24 -right-6 active:bg-pink-300 hover:bg-pink-200 transition-colors duration-100"
             >
                 <IoIosArrowForward
                     onClick={() => setOpenMenu(!openMenu)}

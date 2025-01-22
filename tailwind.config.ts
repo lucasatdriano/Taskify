@@ -8,9 +8,8 @@ export default {
     ],
     theme: {
         extend: {
-            content: {
-                empty: '""',
-                customText: '"✓"',
+            border: {
+                1: '1px',
             },
             borderRadius: {
                 '4xl': '2rem',
