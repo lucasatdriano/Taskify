@@ -1,48 +1,128 @@
+'use client';
 // import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { CiSun, CiStar, CiHome, CiCalendar } from 'react-icons/ci';
 import { IoIosArrowForward } from 'react-icons/io';
 
 export default function SideMenu() {
+    const [openMenu, setOpenMenu] = useState(false);
+
     return (
-        <aside className="h-screen bg-foreground max-w-80 w-fit py-8 font-montserrat shadow-2xl relative rounded-e-4xl">
-            <div className="flex pb-20 items-center gap-3 px-8">
+        <aside
+            className={`h-svh bg-foreground py-8 shadow-2xl relative rounded-e-4xl transition-all duration-500 ${
+                openMenu ? 'w-72' : 'w-32'
+            }`}
+        >
+            <div className="flex pb-20 items-center gap-3 px-8 text-2xl">
                 {/* <Image src={'./sideMenu'} alt={'sdc'}></Image> */}
-                <div className="h-16 w-16 rounded-full bg-primary"></div>
-                <h3 className="text-2xl">Sebastiana</h3>
+                <div className="h-16 w-16 rounded-full bg-primary border-2 border-fontColor"></div>
+                <h3
+                    className={`transition-all duration-75 ${
+                        openMenu
+                            ? 'opacity-100 relative delay-200'
+                            : 'opacity-0 absolute'
+                    }`}
+                >
+                    Lucas
+                </h3>
             </div>
             <button
                 title="Abrir Menu"
                 type="button"
-                className="p-2 text-4xl bg-primary rounded-full shadow-2xl absolute top-24 -right-6 active:bg-pink-200 transition-colors duration-75"
+                className="p-2 text-4xl bg-primary rounded-full shadow-2xl absolute top-24 -right-6 active:bg-pink-200 transition-colors duration-100"
             >
-                <IoIosArrowForward />
+                <IoIosArrowForward
+                    onClick={() => setOpenMenu(!openMenu)}
+                    className={`transition-all duration-200  ${
+                        openMenu ? 'rotate-180' : 'rotate-0'
+                    }`}
+                />
             </button>
             <nav>
                 <ul>
-                    <li className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary">
+                    <li
+                        className={`flex items-center gap-2 text-2xl font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary ${
+                            openMenu ? 'justify-start' : 'justify-center'
+                        }`}
+                    >
                         <CiHome className="text-5xl" />
-                        <p className="text-2xl">Início</p>
+                        <Link
+                            href="/"
+                            className={`transition-all duration-75 ${
+                                openMenu
+                                    ? 'opacity-100 relative delay-200'
+                                    : 'opacity-0 absolute'
+                            }`}
+                        >
+                            Início
+                        </Link>
                     </li>
-                    <li className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary">
+                    <li
+                        className={`flex items-center gap-2 text-2xl cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary ${
+                            openMenu ? 'justify-start' : 'justify-center'
+                        }`}
+                    >
                         <CiSun className="text-5xl" />
-                        <Link href="/listTasks" className="text-2xl">
+                        <Link
+                            href="/listTasks"
+                            className={`transition-all duration-75 ${
+                                openMenu
+                                    ? 'opacity-100 relative delay-200'
+                                    : 'opacity-0 absolute'
+                            }`}
+                        >
                             Diária
                         </Link>
                     </li>
-                    <li className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary">
+                    <li
+                        className={`flex items-center gap-2 text-2xl cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary ${
+                            openMenu ? 'justify-start' : 'justify-center'
+                        }`}
+                    >
                         <CiCalendar className="text-5xl" />
-                        <p className="text-2xl">Planejadas</p>
+                        <p
+                            className={`transition-all duration-75 ${
+                                openMenu
+                                    ? 'opacity-100 relative delay-200'
+                                    : 'opacity-0 absolute'
+                            }`}
+                        >
+                            Planejadas
+                        </p>
                     </li>
-                    <li className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary">
+                    <li
+                        className={`flex items-center gap-2 text-2xl cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary ${
+                            openMenu ? 'justify-start' : 'justify-center'
+                        }`}
+                    >
                         <CiStar className="text-5xl" />
-                        <p className="text-2xl">Importantes</p>
+                        <p
+                            className={`transition-all duration-75 ${
+                                openMenu
+                                    ? 'opacity-100 relative delay-200'
+                                    : 'opacity-0 absolute'
+                            }`}
+                        >
+                            Importantes
+                        </p>
                     </li>
                 </ul>
                 <hr className="border-1 border-fontColor m-4" />
                 <ul>
-                    <li className="flex items-center gap-2 cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary">
-                        <p className="text-2xl"></p>
+                    <li
+                        className={`flex items-center gap-2 text-2xl cursor-pointer hover:bg-slate-100 py-2 px-6 transition-all duration-200 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary ${
+                            openMenu ? 'justify-start' : 'justify-center'
+                        }`}
+                    >
+                        {' '}
+                        <p
+                            className={`transition-all duration-75 ${
+                                openMenu
+                                    ? 'opacity-100 relative delay-200'
+                                    : 'opacity-0 absolute'
+                            }`}
+                        ></p>
                     </li>
                 </ul>
             </nav>
