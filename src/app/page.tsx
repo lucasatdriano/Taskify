@@ -35,7 +35,7 @@ export default function Home() {
             </header>
             <hr className="border-1 border-fontColor" />
             <DropdownField listItems={sortsOptions} active={openDropdown} />
-            <main className="grid grid-cols-6 gap-5 w-full p-6 place-items-center font-montserrat">
+            <main className="grid grid-cols-[repeat(auto-fit,minmax(225px,1fr))] gap-6 w-full p-6 place-items-center justify-start font-montserrat">
                 <div
                     onClick={() => setOpenModal(!openModal)}
                     title="Criar Nova Lista"
@@ -49,6 +49,18 @@ export default function Home() {
                 <div className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-2xl text-center p-6 shadow-md">
                     Lista de Compras
                 </div>
+                <div className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-2xl text-center p-6 shadow-md">
+                    Lista de Compras
+                </div>{' '}
+                <div className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-2xl text-center p-6 shadow-md">
+                    Lista de Compras
+                </div>{' '}
+                <div className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-2xl text-center p-6 shadow-md">
+                    Lista de Compras
+                </div>{' '}
+                <div className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-2xl text-center p-6 shadow-md">
+                    Lista de Compras
+                </div>{' '}
             </main>
             <ModalCreateList
                 active={openModal}

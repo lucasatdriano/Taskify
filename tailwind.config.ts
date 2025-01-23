@@ -8,6 +8,9 @@ export default {
     ],
     theme: {
         extend: {
+            transitionProperty: {
+                'rounded-and-color': 'border-radius, border-color',
+            },
             border: {
                 1: '1px',
             },
