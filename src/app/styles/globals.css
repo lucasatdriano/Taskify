@@ -22,8 +22,26 @@
     }
 }
 
+*::-webkit-scrollbar-track {
+    border-radius: 0 50em 0 50em;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 20px;
+}
+
+*::-webkit-scrollbar {
+    width: 0.75em;
+    border-radius: 20px;
+    background: var(--background);
+    box-shadow: 0 0 18px #23232325;
+}
+
 body {
+    overflow: hidden;
     box-sizing: content-box;
     background: var(--background);
     color: var(--fontColor);
+    font-family: 'Montserrat';
 }

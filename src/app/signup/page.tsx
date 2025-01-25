@@ -1,4 +1,5 @@
 import InputTextField from '@/components/inputTextField';
+import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function Login() {
@@ -9,9 +10,11 @@ export default function Login() {
                     Seja Bem-Vindo
                 </h2>
 
-                <form className="grid flex-2 pb-20 pt-12">
-                    <h3 className="font-montserrat text-3xl my-8">Cadastro</h3>
-                    <div className="grid gap-6 mb-12">
+                <form className="grid w-full py-12 items-center">
+                    <h3 className="font-montserrat text-3xl my-8 text-center">
+                        Cadastro
+                    </h3>
+                    <div className="grid gap-6 mb-12 justify-center">
                         <InputTextField
                             type="text"
                             title="Digite um nome de usuário"
@@ -54,15 +57,22 @@ export default function Login() {
                     <button
                         title="Fazer Cadastro"
                         type="button"
-                        className="text-2xl py-3 bg-primary rounded-3xl px-16 shadow-md outline-none"
+                        className="font-lato text-2xl py-3 bg-primary rounded-3xl w-full shadow-md outline-none hover:bg-pink-200 hover:shadow-lg transition-all duration-300"
                     >
                         Cadastrar
                     </button>
                 </form>
+                <Link
+                    href="/login"
+                    title="Voltar para o Login"
+                    className="font-lato text-lg border bg-background rounded-2xl mb-8 py-3 w-full flex justify-center gap-2 text-nowrap underline outline-none hover:bg-foreground hover:shadow-sm transition-all duration-300"
+                >
+                    Voltar para o Login
+                </Link>
                 <button
                     title="Entrar com Google"
                     type="button"
-                    className="text-xl border bg-foreground rounded-3xl py-4 px-12 flex items-center gap-2 text-nowrap shadow-md border-fontColor outline-none"
+                    className="font-lato text-xl border bg-foreground rounded-2xl py-3 px-12 flex items-center gap-2 text-nowrap shadow-md border-fontColor outline-none hover:bg-slate-200 hover:shadow-lg transition-all duration-300"
                 >
                     Entre com Google
                     <FcGoogle className="text-4xl" />

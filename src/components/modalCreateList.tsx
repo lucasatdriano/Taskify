@@ -1,15 +1,16 @@
 'use client';
 
+import { Dialog, DialogPanel } from '@headlessui/react';
 import { useState } from 'react';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { BsPinAngle, BsClipboard2Check } from 'react-icons/bs';
 
 type Modal = {
-    active: boolean;
-    closeModal: () => void;
+    modalOpen: boolean;
+    modalClose: () => void;
 };
 
-export default function ModalCreateList({ active, closeModal }: Modal) {
+export default function ModalCreateList({ modalOpen, modalClose }: Modal) {
     const [isFixed, setIsFixed] = useState(false);
     const [isDaily, setIsDaily] = useState(false);
     const [valueTitle, setValueTitle] = useState('Título');
@@ -18,7 +19,7 @@ export default function ModalCreateList({ active, closeModal }: Modal) {
         setIsFixed(false);
         setIsDaily(false);
         setValueTitle('Título');
-        closeModal();
+        modalClose();
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,23 +27,20 @@ export default function ModalCreateList({ active, closeModal }: Modal) {
     }
 
     return (
-        <div
-            onMouseDown={handleCloseModal}
-            onTouchStart={handleCloseModal}
-            className={`h-svh w-svw bg-opacity-25 font-montserrat bg-black absolute grid place-items-center top-0 left-0 ${
-                active ? 'opacity-0 invisible' : 'opacity-100 visible'
-            }`}
+        <Dialog
+            onClose={handleCloseModal}
+            open={modalOpen}
+            className="fixed inset-0 grid place-items-center bg-opacity-25 bg-black"
         >
-            <div
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                className="bg-primary p-4 rounded-2xl text-center flex flex-col justify-center items-center"
+            <DialogPanel
+                transition
+                className="bg-primary p-4 rounded-2xl text-center flex flex-col justify-center items-center scale-90 duration-300 data-[open]:scale-100 data-[closed]:scale-90 data-[closed]:opacity-0"
             >
                 <input
                     title="Adicionar nome a sua lista"
                     type="text"
-                    name=""
-                    id=""
+                    name="inputTextTitleList"
+                    id="inputTextTitleList"
                     placeholder="Título"
                     className="text-5xl outline-none bg-transparent w-72 border-b-2 border-transparent focus:border-b-fontColor transition-all duration-200"
                     value={valueTitle}
@@ -86,11 +84,11 @@ export default function ModalCreateList({ active, closeModal }: Modal) {
                 <button
                     title="Clique para Criar Lista"
                     type="button"
-                    className="bg-background text-3xl font-lato rounded-3xl py-2 px-16 mt-16 shadow-lg transition-all hover:bg-opacity-90 hover:bg-zinc-200"
+                    className="bg-background text-2xl select-none font-lato rounded-3xl py-4 px-16 mt-16 shadow-lg transition-all hover:bg-opacity-90 hover:bg-zinc-200"
                 >
                     Criar Lista de Tarefas
                 </button>
-            </div>
-        </div>
+            </DialogPanel>
+        </Dialog>
     );
 }
