@@ -10,9 +10,11 @@ import {
     CiCircleList,
 } from 'react-icons/ci';
 import { IoIosArrowForward } from 'react-icons/io';
+import { useCardList } from '@/contexts/cardListContext';
 
 export default function SideMenuNav() {
     const [isMenuToggle, setIsMenuToggle] = useState(false);
+    const { listsCard } = useCardList();
 
     return (
         <aside
@@ -92,7 +94,7 @@ export default function SideMenuNav() {
                                         : 'opacity-0 absolute'
                                 }`}
                             >
-                                Diária
+                                Diárias
                             </p>
                         </Link>
                     </li>
@@ -141,27 +143,32 @@ export default function SideMenuNav() {
                 </ul>
                 <hr className="border border-fontColor m-4" />
                 <ul>
-                    <li>
-                        <Link
-                            href="/listTasks"
-                            className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
-                                isMenuToggle
-                                    ? 'justify-start'
-                                    : 'justify-center'
-                            }`}
-                        >
-                            <CiCircleList className="text-3xl" />
-                            <p
-                                className={`transition-all duration-75 ${
-                                    isMenuToggle
-                                        ? 'opacity-100 relative delay-200'
-                                        : 'opacity-0 absolute'
-                                }`}
-                            >
-                                Leitura
-                            </p>
-                        </Link>
-                    </li>
+                    {listsCard
+                        .filter((list) => list.isFixed === true)
+                        .map((list) => (
+                            <li key={list.id}>
+                                <Link
+                                    href={`/listTasks/${list.id}?title=${list.title}`}
+                                    key={list.id}
+                                    className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
+                                        isMenuToggle
+                                            ? 'justify-start'
+                                            : 'justify-center'
+                                    }`}
+                                >
+                                    <CiCircleList className="text-3xl" />
+                                    <p
+                                        className={`transition-all duration-75 ${
+                                            isMenuToggle
+                                                ? 'opacity-100 relative delay-200'
+                                                : 'opacity-0 absolute'
+                                        }`}
+                                    >
+                                        {list.title}
+                                    </p>
+                                </Link>
+                            </li>
+                        ))}
                 </ul>
             </nav>
         </aside>

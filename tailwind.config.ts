@@ -30,5 +30,6 @@ export default {
             },
         },
     },
+    safelist: ['animate-spin', 'text-primary'],
     plugins: [],
 } satisfies Config;

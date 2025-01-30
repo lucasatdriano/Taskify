@@ -1,4 +1,4 @@
-import InputTextField from '@/components/inputTextField';
+import InputTextField from '@/components/forms/inputTextField';
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 

@@ -32,7 +32,7 @@ export default function MenuCreateTask({ active, closeMenu }: MenuCreate) {
         >
             <DialogPanel
                 transition
-                className="relative h-svh bg-foreground shadow-2xl rounded-s-4xl flex flex-col justify-between items-center py-5 transition-all duration-1000 data-[open]:max-w-80 data-[closed]:max-w-0"
+                className="relative h-svh bg-foreground shadow-2xl rounded-s-4xl flex flex-col justify-between items-center py-5 transition-all duration-1000 data-[open]:w-80 data-[closed]:w-0"
             >
                 {isImportantTask ? (
                     <FaStar
@@ -60,13 +60,13 @@ export default function MenuCreateTask({ active, closeMenu }: MenuCreate) {
                         <FaRegBell className="text-3xl" />
                         Lembre Me
                     </li>
-                    <li
-                        onClick={() =>
-                            setIsPriorityDropdown(!isPriorityDropdown)
-                        }
-                        className="text-base border-t border-fontColor"
-                    >
-                        <div className="flex items-center gap-2 py-2 px-6 cursor-pointer hover:bg-zinc-200 transition-all duration-200">
+                    <li className="text-base border-t border-fontColor">
+                        <div
+                            onClick={() =>
+                                setIsPriorityDropdown(!isPriorityDropdown)
+                            }
+                            className="flex items-center gap-2 py-2 px-6 cursor-pointer hover:bg-zinc-200 transition-all duration-200"
+                        >
                             <FaExclamation className="text-3xl" />
                             Definir Prioridade
                             <IoIosArrowDown

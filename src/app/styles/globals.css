@@ -43,5 +43,11 @@ body {
     box-sizing: content-box;
     background: var(--background);
     color: var(--fontColor);
-    font-family: 'Montserrat';
+    font-family: 'Montserrat', sans-serif;
+}
+
+@layer utilities {
+    .sortable-transform {
+        @apply transition-transform;
+    }
 }
