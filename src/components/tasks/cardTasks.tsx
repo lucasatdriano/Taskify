@@ -5,24 +5,28 @@ import { CiStar, CiSquareCheck } from 'react-icons/ci';
 import { TbSquare } from 'react-icons/tb';
 import { FaStar } from 'react-icons/fa6';
 import { ptBR } from 'date-fns/locale';
+import { CardTaskProps } from '@/contexts/cardTaskContext';
+// import { useSortable } from '@dnd-kit/sortable';
+// import { useDroppable } from '@dnd-kit/core';
 
-type CardTasks = {
-    task: {
-        id: number;
-        title: string;
-        description: string;
-        priority: string;
-        isFixed: boolean;
-        isCompleted: boolean;
-        createdAt: Date;
-        dueDate: Date;
-        notification: boolean;
-        important: boolean;
-        fileAttached: string;
-    };
-};
+export default function CardTasks({
+    task,
+}: // overId,
+{
+    task: CardTaskProps;
+    // overId: string | null;
+}) {
+    // const { attributes, listeners, setNodeRef, isDragging } = useSortable({
+    //     id: task.id,
+    // });
 
-export default function CardTasks({ task }: CardTasks) {
+    // useDroppable({
+    //     id: `droppable-${task.id}`,
+    // });
+
+    // const opacity = isDragging ? 'opacity-50' : 'opacity-100';
+    // const highlight = overId === task.id ? 'border border-secundary' : '';
+
     const [check, setCheck] = useState(task.isCompleted);
     const [taskImportant, setTaskImportant] = useState(task.important);
     const [isPriority] = useState(task.priority);

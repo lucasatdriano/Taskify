@@ -14,7 +14,7 @@ import { useCardList } from '@/contexts/cardListContext';
 
 export default function SideMenuNav() {
     const [isMenuToggle, setIsMenuToggle] = useState(false);
-    const { listsCard } = useCardList();
+    const { data: listsCard } = useCardList();
 
     return (
         <aside

@@ -1,14 +1,17 @@
 'use client';
-import DropdownField from '@/components/layout/dropdownField';
 import { useState } from 'react';
 import { IoEllipsisVerticalSharp } from 'react-icons/io5';
 import { BiSortAlt2 } from 'react-icons/bi';
 import { CiEdit } from 'react-icons/ci';
 import { AiOutlineDelete } from 'react-icons/ai';
+import { useSearchParams } from 'next/navigation';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css';
+
+import DropdownField from '@/components/layout/dropdownField';
 import CardTasks from '@/components/tasks/cardTasks';
 import ButtonCreateTask from '@/components/tasks/buttonCreateTask';
 import MenuCreateTask from '@/components/tasks/menuCreateTask';
-import { useSearchParams } from 'next/navigation';
 
 // type ListPageProps = {
 //     params: {
@@ -80,10 +83,20 @@ export default function ListTasks() {
         },
     ]);
 
+    // const tasksCompleted = cardsTask.filter((task) => task.isCompleted);
+    // const tasksIncomplete = cardsTask.filter((task) => !task.isCompleted);
+
     const tasksCompleted = cardsTask.filter((task) => task.isCompleted == true);
     const tasksIncomplete = cardsTask.filter(
         (task) => task.isCompleted == false,
     );
+
+    // Tamanho inicial da seção Concluídas
+    const [completedHeight, setCompletedHeight] = useState(200);
+
+    const handleResize = (e: any, { size }: { size: { height: number } }) => {
+        setCompletedHeight(size.height);
+    };
 
     function Nada() {
         return true;
@@ -121,17 +134,27 @@ export default function ListTasks() {
                             <CardTasks key={task.id} task={task} />
                         ))}
                     </div>
-                    <div className="relative">
+                    <div className="relative cursor-grabbing">
                         <h2 className="w-fit bg-background p-2 ml-5 relative text-xl">
                             Concluídas
                         </h2>
                         <hr className="border border-fontColor absolute w-full top-1/2 -z-10" />
                     </div>
-                    <div className="max-h-80 grid gap-4 px-10 overflow-y-auto">
-                        {tasksCompleted.map((task) => (
-                            <CardTasks key={task.id} task={task} />
-                        ))}
-                    </div>
+                    <ResizableBox
+                        width={800} // Largura fixa ou ajustável conforme necessário
+                        height={completedHeight} // A altura é controlada pelo estado
+                        axis="y" // Permite redimensionar apenas na direção vertical (y)
+                        minConstraints={[800, 100]} // Definindo a altura mínima
+                        maxConstraints={[800, 600]} // Definindo a altura máxima
+                        onResizeStop={handleResize} // Lida com o fim do redimensionamento
+                        resizeHandles={['s']} // Permite redimensionar apenas pela parte inferior (handle 's')
+                    >
+                        <div className="grid gap-4 px-10 overflow-y-auto">
+                            {tasksCompleted.map((task) => (
+                                <CardTasks key={task.id} task={task} />
+                            ))}
+                        </div>
+                    </ResizableBox>
                 </div>
                 <ButtonCreateTask
                     closeMenuCreateTask={() =>

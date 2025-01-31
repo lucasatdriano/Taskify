@@ -29,7 +29,7 @@ export default function Home() {
         'Data de Criação',
     );
     const [overId, setOverId] = useState<string | null>(null);
-    const { listsCard, setListsCard } = useCardList();
+    const { data: listsCard, setData: setListsCard } = useCardList();
 
     const sortsOptions = [
         {
