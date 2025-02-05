@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Poppins, Montserrat, Lato } from 'next/font/google';
 import './styles/globals.css';
-import SideMenuNav from '@/components/layout/sideMenuNav';
 import { StorageProviders } from '@/contexts/storageProviders';
+import SideMenuWrapper from '@/components/layout/SideMenuWrapper';
 
 const poppins = Poppins({
     variable: '--font-poppins',
@@ -38,7 +38,7 @@ export default function RootLayout({
                 className={`${poppins.variable} ${montserrat.variable} ${lato.variable} antialiased flex `}
             >
                 <StorageProviders>
-                    <SideMenuNav />
+                    <SideMenuWrapper />
                     {children}
                 </StorageProviders>
             </body>

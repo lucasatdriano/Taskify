@@ -23,7 +23,7 @@ export default function SideMenuNav() {
             }`}
         >
             <Link
-                href="/login"
+                href="/"
                 className="flex mb-20 items-center gap-3 px-8 py-2 text-lg transition-all duration-200 rounded-lg hover:bg-slate-100 hover:shadow-sm hover:border-r-4 hover:border-r-primary"
             >
                 {/* <Image src={''} alt={'sdc'}></Image> */}
@@ -58,7 +58,7 @@ export default function SideMenuNav() {
                 <ul>
                     <li>
                         <Link
-                            href="/"
+                            href="/home"
                             className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
                                 isMenuToggle
                                     ? 'justify-start'

@@ -88,7 +88,7 @@ export default function ModalCreateList({
                         onChange={handleChange}
                     />
                     {error && (
-                        <p className="absolute translate-x-1/2 text-red-600 mt-2">
+                        <p className="absolute translate-x-1/2 text-red-600 mt-2 text-sm">
                             {error}
                         </p>
                     )}

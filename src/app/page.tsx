@@ -1,193 +1,137 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import DropdownField from '@/components/layout/dropdownField';
-import { BiSortAlt2 } from 'react-icons/bi';
-import { IoAddOutline } from 'react-icons/io5';
-import { CiClock2, CiEdit } from 'react-icons/ci';
-import { BsSortAlphaDownAlt, BsSortAlphaDown } from 'react-icons/bs';
-import ModalCreateList from '@/components/lists/modalCreateList';
-import CardList from '@/components/lists/cardList';
-import { CardListProps, useCardList } from '@/contexts/cardListContext';
-import { v4 as uuidv4 } from 'uuid';
+import * as Yup from 'yup';
+import InputTextField from '@/components/forms/inputTextField';
+import userService from '@/services/api/userService';
+import { loginValidationSchema } from '@/validations/loginValidation';
+import Link from 'next/link';
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
 
-import {
-    DndContext,
-    closestCenter,
-    useSensor,
-    useSensors,
-    PointerSensor,
-    DragEndEvent,
-    DragOverEvent,
-} from '@dnd-kit/core';
-import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+export default function Login() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-export default function Home() {
-    const [isDropdownToggle, setIsDropdownToggle] = useState(false);
-    const [isModalToggle, setIsModalToggle] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string | null>(
-        'Data de Criação',
-    );
-    const [overId, setOverId] = useState<string | null>(null);
-    const { data: listsCard, setData: setListsCard } = useCardList();
-
-    const sortsOptions = [
-        {
-            icon: CiEdit,
-            title: 'Personalizado',
-            onDropdownFunction: () => true,
-        },
-        {
-            icon: CiClock2,
-            title: 'Data de Criação',
-            onDropdownFunction: handleSortDate,
-        },
-        {
-            icon: BsSortAlphaDown,
-            title: 'A-Z',
-            onDropdownFunction: handleSortAZ,
-        },
-        {
-            icon: BsSortAlphaDownAlt,
-            title: 'Z-A',
-            onDropdownFunction: handleSortZA,
-        },
-    ];
-
-    useEffect(() => {
-        const listsToDo = localStorage.getItem('listsCard');
-        if (listsToDo) {
-            const parsedLists = JSON.parse(listsToDo);
-            setListsCard(parsedLists);
-        }
-    }, [setListsCard]);
-
-    useEffect(() => {
-        if (listsCard.length > 0) {
-            localStorage.setItem('listsCard', JSON.stringify(listsCard));
-        }
-    }, [listsCard]);
-
-    function handleSort(option: string, sortFunction: () => void) {
-        setSelectedOption(option);
-        sortFunction();
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     }
 
-    function handleSortDate() {
-        const listSortedDateCreate = [...listsCard].sort((a, b) => {
-            const dateA = new Date(a.createdAt);
-            const dateB = new Date(b.createdAt);
-            return dateB.getTime() - dateA.getTime();
-        });
+    async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        try {
+            await loginValidationSchema.validate(formData, {
+                abortEarly: false,
+            });
 
-        setListsCard(listSortedDateCreate);
-    }
-
-    function handleSortAZ() {
-        const listSortedAZ = [...listsCard].sort((a, b) =>
-            a.title.localeCompare(b.title),
-        );
-        setListsCard(listSortedAZ);
-    }
-
-    function handleSortZA() {
-        const listSortedZA = [...listsCard].sort((a, b) =>
-            b.title.localeCompare(a.title),
-        );
-        setListsCard(listSortedZA);
-    }
-
-    function addNewCard(newCard: Omit<CardListProps, 'id'>) {
-        setListsCard((prevCards) => [
-            { ...newCard, id: uuidv4() },
-            ...prevCards,
-        ]);
-    }
-
-    function handleToggleCardListFixed(cardId: string) {
-        setListsCard((prevCards) =>
-            prevCards.map((card) =>
-                card.id == cardId ? { ...card, isFixed: !card.isFixed } : card,
-            ),
-        );
-    }
-
-    function handleDragOver(event: DragOverEvent) {
-        setOverId(event.over?.id?.toString() ?? null);
-    }
-
-    function handleDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
-
-        if (active.id !== over.id) {
-            const oldIndex = listsCard.findIndex(
-                (card) => card.id === active.id,
+            const data = await userService.login(
+                formData.email,
+                formData.password,
             );
-            const newIndex = listsCard.findIndex((card) => card.id === over.id);
-
-            setListsCard((prev) => arrayMove(prev, oldIndex, newIndex));
-            setSelectedOption('Personalizado');
+            console.log('Usuário logado:', data);
+            setErrors({});
+        } catch (error) {
+            if (error instanceof Yup.ValidationError) {
+                const validationErrors: { [key: string]: string } = {};
+                error.inner.forEach((err) => {
+                    if (err.path) {
+                        validationErrors[err.path] = err.message;
+                    }
+                });
+                setErrors(validationErrors);
+            } else if (error instanceof Error) {
+                console.error('Usuário não logado:', error);
+                setErrors({
+                    general: error.message,
+                });
+            }
         }
-
-        setOverId(null);
     }
-    const sensors = useSensors(useSensor(PointerSensor));
 
     return (
-        <div className="w-full p-10">
-            <header className="flex w-full place-content-center relative">
-                <h1 className="font-poppins text-5xl text-center pb-4">
-                    Taskify
-                </h1>
-                <BiSortAlt2
-                    onClick={() => setIsDropdownToggle(!isDropdownToggle)}
-                    className="absolute right-0 text-6xl cursor-pointer hover:bg-gray-200 rounded-full p-2 transition-colors duration-200"
-                />
-            </header>
-            <hr className="border border-fontColor" />
-
-            <DropdownField
-                listItems={sortsOptions}
-                dropdownToggle={isDropdownToggle}
-                setDropdownToggle={setIsDropdownToggle}
-                onSort={handleSort}
-                selectedOption={selectedOption}
-            />
-
-            <DndContext
-                collisionDetection={closestCenter}
-                onDragOver={handleDragOver}
-                onDragEnd={handleDragEnd}
-                sensors={sensors}
-            >
-                <SortableContext items={listsCard.map((card) => card.id)}>
-                    <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(200px,200px))] gap-8 p-6 place-items-center justify-center font-montserrat xl:justify-start">
-                        <div
-                            onClick={() => setIsModalToggle(!isModalToggle)}
-                            title="Criar Nova Lista"
-                            className="w-56 h-56 bg-primary rounded-2xl grid place-items-center text-6xl shadow-md cursor-pointer hover:bg-pink-200 transition-colors duration-100"
-                        >
-                            <IoAddOutline />
-                        </div>
-
-                        {listsCard.map((card) => (
-                            <CardList
-                                key={card.id}
-                                list={card}
-                                onToggleFixed={handleToggleCardListFixed}
-                                overId={overId}
+        <div className="grid place-items-center w-full h-svh">
+            <div className="py-4 px-12 rounded-3xl border-2 border-fontColor relative flex">
+                <div className="py-10 px-4 flex-1">
+                    <h3 className="font-montserrat text-3xl mt-8 mb-12">
+                        Cadastro
+                    </h3>
+                    <Link
+                        href="/signup"
+                        title="Criar uma conta"
+                        className="text-xl font-lato bg-primary rounded-3xl py-4 px-16 shadow-md cursor-pointer hover:bg-pink-200 hover:shadow-lg transition-all duration-300"
+                    >
+                        Criar uma Conta
+                    </Link>
+                    <button
+                        title="Entrar com Google"
+                        type="button"
+                        className="text-xl font-lato border bg-foreground rounded-3xl py-4 px-12 mt-20 flex items-center gap-2 text-nowrap shadow-md border-fontColor outline-none cursor-pointer hover:bg-slate-200 hover:shadow-lg transition-all duration-300"
+                    >
+                        Entre com Google
+                        <FcGoogle className="text-4xl" />
+                    </button>
+                </div>
+                <div className="relative flex-auto items-center flex flex-col">
+                    <h2 className="text-4xl font-poppins bg-background mt-4">
+                        Taskify
+                    </h2>
+                    <hr className="w-[2px] h-full bg-fontColor absolute top-0 left-1/2 -z-10" />
+                </div>
+                <form onSubmit={handleLogin} className="grid p-10 flex-2 pl-24">
+                    <h3 className="font-montserrat text-3xl my-8">Login</h3>
+                    <div className="grid gap-6 mb-12">
+                        <div className="w-full">
+                            <InputTextField
+                                type="text"
+                                title="Digite seu email"
+                                name="email"
+                                id="inputEmail"
+                                value={formData.email}
+                                label="Email"
+                                onChange={handleChange}
                             />
-                        ))}
+                            {errors.email && (
+                                <p className="text-red-600 text-sm">
+                                    {errors.email}
+                                </p>
+                            )}
+                        </div>
+                        <div className="grid place-items-end gap-1">
+                            <div className="w-full">
+                                <InputTextField
+                                    type="password"
+                                    title="Digite sua senha"
+                                    name="password"
+                                    id="inputPassword"
+                                    value={formData.password}
+                                    label="Senha"
+                                    onChange={handleChange}
+                                />
+                                {errors.password && (
+                                    <p className="text-red-600 text-sm">
+                                        {errors.password}
+                                    </p>
+                                )}
+                            </div>
+                            <p
+                                title="Esqueceu sua senha?"
+                                className="text-sm pr-4 text-secundary underline cursor-pointer font-montserrat"
+                            >
+                                Esqueceu sua senha?
+                            </p>
+                        </div>
                     </div>
-                </SortableContext>
-            </DndContext>
-
-            <ModalCreateList
-                modalOpen={isModalToggle}
-                modalClose={() => setIsModalToggle(!isModalToggle)}
-                addNewCard={addNewCard}
-            />
+                    <button
+                        title="Fazer Login"
+                        type="submit"
+                        className="text-2xl font-lato py-3 bg-primary rounded-3xl px-16 shadow-md outline-none cursor-pointer hover:shadow-lg hover:bg-pink-200 transition-all duration-300"
+                    >
+                        Login
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

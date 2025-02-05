@@ -21,5 +21,5 @@ export const signupValidationSchema = Yup.object().shape({
         .min(6, 'A senha deve ter pelo menos 6 caracteres.'),
     confirmPassword: Yup.string()
         .required('Confirme sua senha.')
-        .oneOf([Yup.ref('password')], 'As senhas não coincidem.'),
+        .oneOf([Yup.ref('password')], 'As senhas não são iguais.'),
 });
