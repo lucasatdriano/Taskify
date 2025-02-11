@@ -1,14 +1,19 @@
 'use client';
 
 import * as Yup from 'yup';
+import { setCookie } from 'cookies-next';
+
 import InputTextField from '@/components/forms/inputTextField';
 import userService from '@/services/api/userService';
 import { loginValidationSchema } from '@/validations/loginValidation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import localStorageUtil from '@/utils/localStorage';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -30,7 +35,15 @@ export default function Login() {
                 formData.email,
                 formData.password,
             );
-            console.log('Usuário logado:', data);
+
+            localStorageUtil.set('accessToken', data.accessToken);
+            localStorageUtil.set('refreshToken', data.refreshToken);
+            setCookie('id', data.id, {
+                maxAge: 60 * 60 * 24 * 30,
+                path: '/',
+            });
+
+            router.push(`/home/${data.id}`);
             setErrors({});
         } catch (error) {
             if (error instanceof Yup.ValidationError) {

@@ -19,12 +19,14 @@ const listService = {
         title: string,
         daily: boolean,
         collaboratorsEmails: string,
+        fixed: boolean,
     ) => {
         try {
             const response = await api.post(API_ROUTES.LISTS.CREATE_LIST, {
                 title,
                 daily,
                 collaboratorsEmails,
+                fixed,
             });
             return response.data;
         } catch (error) {
@@ -35,7 +37,7 @@ const listService = {
             throw new Error('Erro ao conectar ao servidor.');
         }
     },
-    task: async (listId: string) => {
+    list: async (listId: string) => {
         try {
             const response = await api.get(API_ROUTES.LISTS.LIST({ listId }));
             return response.data;
@@ -47,10 +49,19 @@ const listService = {
             throw new Error('Erro ao conectar ao servidor.');
         }
     },
-    updateList: async (listId: string) => {
+    updateList: async (
+        listId: string,
+        data: {
+            title?: string;
+            daily?: boolean;
+            fixed?: boolean;
+            collaboratorsEmails?: string;
+        },
+    ) => {
         try {
             const response = await api.put(
                 API_ROUTES.LISTS.UPDATE_LIST({ listId }),
+                data,
             );
             return response.data;
         } catch (error) {

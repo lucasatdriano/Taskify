@@ -1,7 +1,7 @@
 'use client';
-// import Image from 'next/image';
+
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     CiSun,
     CiStar,
@@ -10,11 +10,47 @@ import {
     CiCircleList,
 } from 'react-icons/ci';
 import { IoIosArrowForward } from 'react-icons/io';
+import userService from '@/services/api/userService';
+import Image from 'next/image';
+import { formatName } from '@/utils/formatters';
 import { useCardList } from '@/contexts/cardListContext';
 
 export default function SideMenuNav() {
     const [isMenuToggle, setIsMenuToggle] = useState(false);
-    const { data: listsCard } = useCardList();
+    const [user, setUser] = useState({ name: '', image: '', email: '' });
+    const { listsCard } = useCardList();
+
+    const fixedLists = listsCard.filter((list) => list.UserLists?.[0].fixed);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const getCookie = (name: string) => {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop()?.split(';').shift();
+            };
+
+            const id = getCookie('id');
+
+            if (!id) return;
+
+            try {
+                const data = await userService.profile(id);
+
+                setUser({
+                    name: formatName(data.name),
+                    image: data.image,
+                    email: data.email,
+                });
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(error.message);
+                }
+            }
+        };
+
+        fetchProfile();
+    }, []);
 
     return (
         <aside
@@ -26,12 +62,18 @@ export default function SideMenuNav() {
                 href="/"
                 className="flex mb-20 items-center gap-3 px-8 py-2 text-lg transition-all duration-200 rounded-lg hover:bg-slate-100 hover:shadow-sm hover:border-r-4 hover:border-r-primary"
             >
-                {/* <Image src={''} alt={'sdc'}></Image> */}
                 <div
-                    className={`h-12 w-12 rounded-full bg-primary border-2 border-fontColor ${
+                    className={`h-12 w-12 rounded-full border-2 border-fontColor ${
                         isMenuToggle ? 'mx-0' : 'mx-auto'
                     }`}
-                ></div>
+                >
+                    <Image
+                        width={50}
+                        height={50}
+                        src={'/images/imageUserPlaceholder.svg'}
+                        alt={'imagem do usuário'}
+                    />
+                </div>
                 <h3
                     className={`transition-all duration-75 ${
                         isMenuToggle
@@ -39,7 +81,7 @@ export default function SideMenuNav() {
                             : 'opacity-0 absolute'
                     }`}
                 >
-                    Lucas
+                    {user.name}
                 </h3>
             </Link>
             <button
@@ -143,32 +185,30 @@ export default function SideMenuNav() {
                 </ul>
                 <hr className="border border-fontColor m-4" />
                 <ul>
-                    {listsCard
-                        .filter((list) => list.isFixed === true)
-                        .map((list) => (
-                            <li key={list.id}>
-                                <Link
-                                    href={`/listTasks/${list.id}?title=${list.title}`}
-                                    key={list.id}
-                                    className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
+                    {fixedLists.map((list) => (
+                        <li key={list.id}>
+                            <Link
+                                href={`/listTasks/${list.id}?title=${list.title}`}
+                                key={list.id}
+                                className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
+                                    isMenuToggle
+                                        ? 'justify-start'
+                                        : 'justify-center'
+                                }`}
+                            >
+                                <CiCircleList className="text-3xl" />
+                                <p
+                                    className={`transition-all duration-75 ${
                                         isMenuToggle
-                                            ? 'justify-start'
-                                            : 'justify-center'
+                                            ? 'opacity-100 relative delay-200'
+                                            : 'opacity-0 absolute'
                                     }`}
                                 >
-                                    <CiCircleList className="text-3xl" />
-                                    <p
-                                        className={`transition-all duration-75 ${
-                                            isMenuToggle
-                                                ? 'opacity-100 relative delay-200'
-                                                : 'opacity-0 absolute'
-                                        }`}
-                                    >
-                                        {list.title}
-                                    </p>
-                                </Link>
-                            </li>
-                        ))}
+                                    {list.title}
+                                </p>
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </nav>
         </aside>

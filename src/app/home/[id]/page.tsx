@@ -8,9 +8,7 @@ import { CiClock2, CiEdit } from 'react-icons/ci';
 import { BsSortAlphaDownAlt, BsSortAlphaDown } from 'react-icons/bs';
 import ModalCreateList from '@/components/lists/modalCreateList';
 import CardList from '@/components/lists/cardList';
-import { CardListProps, useCardList } from '@/contexts/cardListContext';
-import { v4 as uuidv4 } from 'uuid';
-
+import { useCardList } from '@/contexts/cardListContext';
 import {
     DndContext,
     closestCenter,
@@ -21,6 +19,7 @@ import {
     DragOverEvent,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
+import listService from '@/services/api/listService';
 
 export default function Home() {
     const [isDropdownToggle, setIsDropdownToggle] = useState(false);
@@ -29,7 +28,7 @@ export default function Home() {
         'Data de Criação',
     );
     const [overId, setOverId] = useState<string | null>(null);
-    const { data: listsCard, setData: setListsCard } = useCardList();
+    const { listsCard, setListsCard } = useCardList();
 
     const sortsOptions = [
         {
@@ -55,18 +54,17 @@ export default function Home() {
     ];
 
     useEffect(() => {
-        const listsToDo = localStorage.getItem('listsCard');
-        if (listsToDo) {
-            const parsedLists = JSON.parse(listsToDo);
-            setListsCard(parsedLists);
+        async function fetchLists() {
+            try {
+                const lists = await listService.lists();
+                setListsCard(lists);
+            } catch (error) {
+                console.error('Erro ao buscar listas:', error);
+            }
         }
-    }, [setListsCard]);
 
-    useEffect(() => {
-        if (listsCard.length > 0) {
-            localStorage.setItem('listsCard', JSON.stringify(listsCard));
-        }
-    }, [listsCard]);
+        fetchLists();
+    }, [setListsCard]);
 
     function handleSort(option: string, sortFunction: () => void) {
         setSelectedOption(option);
@@ -97,21 +95,6 @@ export default function Home() {
         setListsCard(listSortedZA);
     }
 
-    function addNewCard(newCard: Omit<CardListProps, 'id'>) {
-        setListsCard((prevCards) => [
-            { ...newCard, id: uuidv4() },
-            ...prevCards,
-        ]);
-    }
-
-    function handleToggleCardListFixed(cardId: string) {
-        setListsCard((prevCards) =>
-            prevCards.map((card) =>
-                card.id == cardId ? { ...card, isFixed: !card.isFixed } : card,
-            ),
-        );
-    }
-
     function handleDragOver(event: DragOverEvent) {
         setOverId(event.over?.id?.toString() ?? null);
     }
@@ -132,6 +115,7 @@ export default function Home() {
 
         setOverId(null);
     }
+
     const sensors = useSensors(useSensor(PointerSensor));
 
     return (
@@ -175,7 +159,6 @@ export default function Home() {
                             <CardList
                                 key={card.id}
                                 list={card}
-                                onToggleFixed={handleToggleCardListFixed}
                                 overId={overId}
                             />
                         ))}
@@ -186,7 +169,7 @@ export default function Home() {
             <ModalCreateList
                 modalOpen={isModalToggle}
                 modalClose={() => setIsModalToggle(!isModalToggle)}
-                addNewCard={addNewCard}
+                listsCard={listsCard}
             />
         </div>
     );

@@ -61,10 +61,29 @@ const taskService = {
             throw new Error('Erro ao conectar ao servidor.');
         }
     },
-    updateTask: async (listId: string, taskId: string) => {
+    updateTask: async (
+        listId: string,
+        taskId: string,
+        title?: string,
+        description?: string,
+        priority?: string,
+        completed?: boolean,
+        dueDate?: string,
+        notification?: boolean,
+        file?: string,
+    ) => {
         try {
             const response = await api.put(
                 API_ROUTES.TASKS.UPDATE_TASK({ listId, taskId }),
+                {
+                    title,
+                    description,
+                    priority,
+                    completed,
+                    dueDate,
+                    notification,
+                    file,
+                },
             );
             return response.data;
         } catch (error) {

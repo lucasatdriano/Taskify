@@ -5,14 +5,17 @@ type Params = {
 };
 
 const API_ROUTES = {
+    AUTH: {
+        FORGOT_PASSWORD: '/auth/forgotPassword',
+        RESET_PASSWORD: '/auth/resetPassword',
+        REFRESH_TOKEN: '/auth/refreshToken',
+    },
     USERS: {
         BASE: '/users',
         REGISTER: '/users/register',
         LOGIN: '/users/login',
         PROFILE: ({ userId }: Params) => `/users/${userId}`,
         UPDATE_NAME: ({ userId }: Params) => `/users/${userId}/name`,
-        UPDATE_PASSWORD: ({ userId }: Params) => `/users/${userId}/password`,
-        REFRESH_TOKEN: '/users/refreshToken',
         LOGOUT: ({ userId }: Params) => `/users/${userId}/logout`,
     },
     LISTS: {

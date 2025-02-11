@@ -3,12 +3,19 @@ import createStorageContext from './storageContext';
 export type CardListProps = {
     id: string;
     title: string;
-    isFixed: boolean;
-    isDaily: boolean;
-    createdAt: Date;
-    collaborators: null;
+    createdAt: string;
+    daily: boolean;
+    collaboratorsEmails: string;
+    userId: string;
+    UserLists: Array<{
+        fixed: boolean;
+    }>;
 };
 
-// Criando o contexto específico para listas
-export const { StorageProvider: CardListProvider, useStorage: useCardList } =
+export const { StorageProvider: CardListProvider, useStorage } =
     createStorageContext<CardListProps[]>('listsCard', []);
+
+export function useCardList() {
+    const { data: listsCard, setData: setListsCard } = useStorage();
+    return { listsCard, setListsCard };
+}

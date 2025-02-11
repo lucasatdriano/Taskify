@@ -7,8 +7,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { signupValidationSchema } from '@/validations/loginValidation';
+import { useRouter } from 'next/navigation';
 
 export default function Signup() {
+    const router = useRouter();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -23,6 +25,8 @@ export default function Signup() {
 
     async function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        setErrors({});
+
         try {
             await signupValidationSchema.validate(formData, {
                 abortEarly: false,
@@ -34,6 +38,7 @@ export default function Signup() {
                 formData.password,
             );
             console.log('Usuário cadastrado:', data);
+            router.push('/');
             setErrors({});
         } catch (error) {
             if (error instanceof Yup.ValidationError) {

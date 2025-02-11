@@ -14,6 +14,5 @@ export type CardTaskProps = {
     fileAttached: string;
 };
 
-// Criando o contexto específico para tarefas
 export const { StorageProvider: CardTaskProvider, useStorage: useCardTask } =
     createStorageContext<CardTaskProps[]>('cardTasks', []);

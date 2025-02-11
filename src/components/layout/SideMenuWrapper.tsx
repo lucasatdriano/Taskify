@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import SideMenuNav from './sideMenuNav';
+import { Suspense } from 'react';
 
 export default function SideMenuWrapper() {
     const pathname = usePathname();
@@ -9,5 +10,9 @@ export default function SideMenuWrapper() {
 
     if (hiddenRoutes.includes(pathname)) return null;
 
-    return <SideMenuNav />;
+    return (
+        <Suspense fallback={<div>Carregando menu...</div>}>
+            <SideMenuNav />
+        </Suspense>
+    );
 }
