@@ -13,9 +13,11 @@ export const getListValidationSchema = (existingLists: Array<CardListProps>) =>
             .test(
                 'unique-name',
                 'Esse nome já está em uso. Escolha outro.',
-                (value) =>
-                    !existingLists.map((existingList) => {
-                        existingList.title.includes(value);
-                    }),
+                (value) => {
+                    if (!value) return false;
+                    return !existingLists.some(
+                        (existingList) => existingList.title === value.trim(),
+                    );
+                },
             ),
     });

@@ -27,6 +27,8 @@ const API_ROUTES = {
     },
     TASKS: {
         TASKS: ({ listId }: Params) => `/tasks/${listId}`,
+        TASKS_PLANNED: ({ userId }: Params) => `/tasks/planned/${userId}`,
+        TASKS_IMPORTANT: ({ userId }: Params) => `/tasks/important/${userId}`,
         CREATE_TASK: ({ listId }: Params) => `/tasks/${listId}`,
         TASK: ({ listId, taskId }: Params) => `/tasks/${listId}/${taskId}`,
         UPDATE_TASK: ({ listId, taskId }: Params) =>

@@ -1,6 +1,6 @@
 import createStorageContext from './storageContext';
 
-export type CardTaskProps = {
+export interface CardTaskProps {
     id: number;
     title: string;
     description: string;
@@ -12,7 +12,7 @@ export type CardTaskProps = {
     notification: boolean;
     important: boolean;
     fileAttached: string;
-};
+}
 
 export const { StorageProvider: CardTaskProvider, useStorage: useCardTask } =
     createStorageContext<CardTaskProps[]>('cardTasks', []);

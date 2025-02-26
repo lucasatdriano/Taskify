@@ -15,12 +15,12 @@ import { AiOutlineDelete } from 'react-icons/ai';
 import { LuPanelRightClose } from 'react-icons/lu';
 import { Dialog, DialogPanel } from '@headlessui/react';
 
-type MenuCreate = {
+interface MenuCreateProps {
     active: boolean;
     closeMenu: () => void;
-};
+}
 
-export default function MenuCreateTask({ active, closeMenu }: MenuCreate) {
+export default function MenuCreateTask({ active, closeMenu }: MenuCreateProps) {
     const [isImportantTask, setIsImportantTask] = useState(false);
     const [isPriorityDropdown, setIsPriorityDropdown] = useState(false);
 

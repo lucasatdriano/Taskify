@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { IconType } from 'react-icons';
 
-type DropdownFieldProps = {
+interface DropdownFieldProps {
     listItems: Array<{
         icon: IconType;
         title: string;
@@ -13,7 +13,7 @@ type DropdownFieldProps = {
     setDropdownToggle: (state: boolean) => void;
     onSort?: (option: string, sortFunction: () => void) => void;
     selectedOption?: string | null;
-};
+}
 
 export default function DropdownField({
     listItems,

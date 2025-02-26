@@ -2,24 +2,25 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import {
-    CiSun,
-    CiStar,
-    CiHome,
-    CiCalendar,
-    CiCircleList,
-} from 'react-icons/ci';
+import { CiStar, CiHome, CiCalendar, CiCircleList } from 'react-icons/ci';
 import { IoIosArrowForward } from 'react-icons/io';
 import userService from '@/services/api/userService';
 import Image from 'next/image';
 import { formatName } from '@/utils/formatters';
 import { useCardList } from '@/contexts/cardListContext';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function SideMenuNav() {
     const [isMenuToggle, setIsMenuToggle] = useState(false);
-    const [user, setUser] = useState({ name: '', image: '', email: '' });
+    const [user, setUser] = useState({
+        id: '',
+        name: '',
+        image: '',
+        email: '',
+    });
     const { listsCard } = useCardList();
-
+    const pathname = usePathname();
+    const router = useRouter();
     const fixedLists = listsCard.filter((list) => list.UserLists?.[0].fixed);
 
     useEffect(() => {
@@ -31,13 +32,12 @@ export default function SideMenuNav() {
             };
 
             const id = getCookie('id');
-
             if (!id) return;
 
             try {
                 const data = await userService.profile(id);
-
                 setUser({
+                    id: data.id,
                     name: formatName(data.name),
                     image: data.image,
                     email: data.email,
@@ -51,6 +51,14 @@ export default function SideMenuNav() {
 
         fetchProfile();
     }, []);
+
+    function isPathActive(path: string) {
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        return pathname === normalizedPath ||
+            pathname.startsWith(normalizedPath + '/')
+            ? 'bg-slate-100 shadow-sm border-r-4 border-r-primary'
+            : '';
+    }
 
     return (
         <aside
@@ -100,12 +108,12 @@ export default function SideMenuNav() {
                 <ul>
                     <li>
                         <Link
-                            href="/home"
+                            href={`/home/${user.id}`}
                             className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
                                 isMenuToggle
                                     ? 'justify-start'
                                     : 'justify-center'
-                            }`}
+                            } ${isPathActive(`home/${user.id}`)}`}
                         >
                             <CiHome className="text-3xl" />
                             <p
@@ -121,33 +129,12 @@ export default function SideMenuNav() {
                     </li>
                     <li>
                         <Link
-                            href="/"
+                            href="/a"
                             className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
                                 isMenuToggle
                                     ? 'justify-start'
                                     : 'justify-center'
-                            }`}
-                        >
-                            <CiSun className="text-3xl" />
-                            <p
-                                className={`transition-all duration-75 ${
-                                    isMenuToggle
-                                        ? 'opacity-100 relative delay-200'
-                                        : 'opacity-0 absolute'
-                                }`}
-                            >
-                                Diárias
-                            </p>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/"
-                            className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
-                                isMenuToggle
-                                    ? 'justify-start'
-                                    : 'justify-center'
-                            }`}
+                            } ${isPathActive(`/a`)}`}
                         >
                             <CiCalendar className="text-3xl" />
                             <p
@@ -188,13 +175,18 @@ export default function SideMenuNav() {
                     {fixedLists.map((list) => (
                         <li key={list.id}>
                             <Link
-                                href={`/listTasks/${list.id}?title=${list.title}`}
-                                key={list.id}
+                                href={`/listTasks/${list.id}`} // Apenas o caminho base
+                                onClick={(e) => {
+                                    e.preventDefault(); // Previne comportamento inesperado
+                                    router.push(
+                                        `/listTasks/${list.id}?title=${list.title}`,
+                                    );
+                                }}
                                 className={`flex items-center gap-2 w-full text-base font-montserrat cursor-pointer hover:bg-slate-100 py-2 px-6 rounded-lg hover:shadow-sm hover:border-r-4 hover:border-r-primary transition-all duration-75 ${
                                     isMenuToggle
                                         ? 'justify-start'
                                         : 'justify-center'
-                                }`}
+                                } ${isPathActive(`/listTasks/${list.id}`)}`} // Passa apenas o ID sem query params
                             >
                                 <CiCircleList className="text-3xl" />
                                 <p

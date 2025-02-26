@@ -9,11 +9,11 @@ import { getListValidationSchema } from '@/validations/listValidation';
 import listService from '@/services/api/listService';
 import { CardListProps } from '@/contexts/cardListContext';
 
-type ModalProps = {
+interface ModalProps {
     modalOpen: boolean;
     modalClose: () => void;
     listsCard: Array<CardListProps>;
-};
+}
 
 export default function ModalCreateList({
     modalOpen,
@@ -36,7 +36,7 @@ export default function ModalCreateList({
 
             return () => clearTimeout(timeout);
         }
-    }, [modalOpen]);
+    }, [modalOpen, listsCard]);
 
     function handleCloseModal() {
         setIsFixed(false);
@@ -62,7 +62,9 @@ export default function ModalCreateList({
         setIsAddingCollaborator(true);
     }
 
-    async function handleSubmitCreateCard() {
+    async function handleSubmitCreateCard(event: React.FormEvent) {
+        event.preventDefault();
+
         try {
             const validationSchema = getListValidationSchema(listsCard);
             await validationSchema.validate({ listName: valueTitle });

@@ -146,7 +146,7 @@ export default function Home() {
                 sensors={sensors}
             >
                 <SortableContext items={listsCard.map((card) => card.id)}>
-                    <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(200px,200px))] gap-8 p-6 place-items-center justify-center font-montserrat xl:justify-start">
+                    <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(200px,200px))] gap-8 p-6 place-items-center justify-center font-montserrat md:justify-start">
                         <div
                             onClick={() => setIsModalToggle(!isModalToggle)}
                             title="Criar Nova Lista"

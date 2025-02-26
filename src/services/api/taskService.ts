@@ -15,12 +15,41 @@ const taskService = {
             throw new Error('Erro ao conectar ao servidor.');
         }
     },
+    tasksPlanned: async (userId: string) => {
+        try {
+            const response = await api.get(
+                API_ROUTES.TASKS.TASKS_PLANNED({ userId }),
+            );
+            return response.data;
+        } catch (error) {
+            if (error instanceof AxiosError && error.response?.data) {
+                const errorMessage = `${error.response.data.error} - ${error.response.data.details}`;
+                throw new Error(errorMessage);
+            }
+            throw new Error('Erro ao conectar ao servidor.');
+        }
+    },
+    tasksImportants: async (userId: string) => {
+        try {
+            const response = await api.get(
+                API_ROUTES.TASKS.TASKS_IMPORTANT({ userId }),
+            );
+            return response.data;
+        } catch (error) {
+            if (error instanceof AxiosError && error.response?.data) {
+                const errorMessage = `${error.response.data.error} - ${error.response.data.details}`;
+                throw new Error(errorMessage);
+            }
+            throw new Error('Erro ao conectar ao servidor.');
+        }
+    },
     createTask: async (
         listId: string,
         title: string,
         description?: string,
         priority?: string,
         completed?: boolean,
+        important?: boolean,
         dueDate?: string,
         notification?: boolean,
         file?: string,
@@ -33,6 +62,7 @@ const taskService = {
                     description,
                     priority,
                     completed,
+                    important,
                     dueDate,
                     notification,
                     file,
@@ -68,6 +98,7 @@ const taskService = {
         description?: string,
         priority?: string,
         completed?: boolean,
+        important?: boolean,
         dueDate?: string,
         notification?: boolean,
         file?: string,
@@ -80,6 +111,7 @@ const taskService = {
                     description,
                     priority,
                     completed,
+                    important,
                     dueDate,
                     notification,
                     file,

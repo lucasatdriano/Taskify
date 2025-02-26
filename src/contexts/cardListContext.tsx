@@ -1,6 +1,6 @@
 import createStorageContext from './storageContext';
 
-export type CardListProps = {
+export interface CardListProps {
     id: string;
     title: string;
     createdAt: string;
@@ -10,7 +10,7 @@ export type CardListProps = {
     UserLists: Array<{
         fixed: boolean;
     }>;
-};
+}
 
 export const { StorageProvider: CardListProvider, useStorage } =
     createStorageContext<CardListProps[]>('listsCard', []);

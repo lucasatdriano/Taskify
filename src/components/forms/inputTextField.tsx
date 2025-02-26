@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-type Input = {
+interface InputProps {
     type: string;
     title: string;
     name: string;
@@ -10,7 +10,7 @@ type Input = {
     value: string;
     label: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+}
 
 export default function InputTextField({
     type,
@@ -20,7 +20,7 @@ export default function InputTextField({
     value,
     label,
     onChange,
-}: Input) {
+}: InputProps) {
     const [hasText, setHasText] = useState(false);
 
     useEffect(() => {
